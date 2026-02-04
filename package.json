@@ -1,0 +1,54 @@
+{
+  "name": "sales-saver",
+  "version": "1.0.0",
+  "description": "Sales Saver - AI-assisted sales prioritization dashboard",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "server": "tsx server/server.ts",
+    "check-email": "tsx scripts/check-email.ts",
+    "simulate-customers": "tsx scripts/simulate-customers.ts",
+    "get-gmail-token": "tsx scripts/get-gmail-token.ts",
+    "spoof-email": "tsx scripts/spoof-email.ts",
+    "demo": "tsx scripts/run-demo.ts",
+    "interactive-demo": "tsx scripts/interactive-demo.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-cerebras:pearlh-cerebras/sales-rep-visualizer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.72.1",
+    "@reduxjs/toolkit": "^2.0.1",
+    "@slack/web-api": "^7.13.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "googleapis": "^171.1.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-redux": "^9.0.4",
+    "recharts": "^3.7.0",
+    "redux": "^5.0.1",
+    "stripe": "^20.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.3",
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}

@@ -1,151 +1,264 @@
-# Sales Prioritization Dashboard
+# Sales Rep Visualizer
 
-An AI-assisted sales prioritization dashboard that automatically categorizes deals and provides actionable suggestions, saving sales reps time on prioritization and reporting.
+A full-stack sales prioritization dashboard with real-time Slack integration, simulated email trial requests, Stripe payment tracking, and an in-memory HubSpot-style CRM.
 
 ## Features
 
-- **AI-Powered Prioritization**: Automatically categorizes deals into 4 buckets:
-  - Most Eager to Sign
-  - Least Eager to Sign
-  - Biggest Churn Risks
-  - Upsell Opportunities
+- **📧 Email Integration**: Simulated trial request detection (spoof mode)
+- **💬 Slack Integration**: Real-time message prioritization based on revenue potential
+- **💳 Stripe Integration**: Track payments and MRR from your sandbox
+- **📊 HubSpot Clone**: In-memory CRM with drag-and-drop pipeline management
+- **📈 Business Reports**: Auto-generated reports with PDF export
+- **🤖 Customer Bot**: Simulate customer messages for testing
 
-- **Two View Modes**:
-  - Numbers View: Quick overview with counts and pipeline distribution
-  - Priority List: Detailed deal cards with AI suggestions and one-click actions
+## Quick Start
 
-- **Funnel Visualization**: Automatic pipeline health metrics including:
-  - Inbound sources breakdown
-  - Outbound response rates
-  - Pipeline stage distribution
-  - Expected close value, lost deals, and active trials
+### 1. Install Dependencies
 
-- **Transparent AI**: Every suggestion shows:
-  - Confidence score
-  - Clear reasons (bullet points)
-  - One-click accept/reject actions
-  - Reversible suggestions
-
-## Tech Stack
-
-- **Frontend**: React 19 + TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS 4
-- **State Management**: Redux Toolkit
-- **Charts**: Recharts
-- **No Backend**: Uses mock data for demo purposes
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ installed
-
-### Installation
-
-1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Start the development server:
+### 2. Set Up Environment Variables
+
+Copy `.env.example` to `.env` and fill in your credentials:
+
+```bash
+cp .env.example .env
+```
+
+You'll need:
+- **Slack**: Bot token (see setup below)
+- **Stripe**: Secret key (see setup below)
+- **Gmail**: Optional - leave empty to use spoof mode (recommended for testing)
+
+### 3. Start the Backend Server
+
+```bash
+npm run server
+```
+
+The server will run on `http://localhost:3001`
+
+### 4. Start the Frontend
+
+In a new terminal:
+
 ```bash
 npm run dev
 ```
 
-3. Open your browser to `http://localhost:3000`
+The app will be available at `http://localhost:5173`
 
-### Build for Production
+## Setup Instructions
+
+### Slack Setup
+
+1. Go to [Slack API](https://api.slack.com/apps) and click "Create New App"
+2. Choose "From scratch"
+3. Enter an app name (e.g., "Sales Rep Visualizer") and select your workspace
+4. Navigate to **OAuth & Permissions** in the left sidebar
+5. Under **Bot Token Scopes**, add these scopes:
+   - `channels:history` - Read channel history
+   - `channels:join` - Join channels
+   - `chat:write` - Post messages
+   - `groups:history` - Read private channel history
+   - `im:history` - Read DM history
+   - `mpim:history` - Read group DM history
+6. Scroll to **OAuth Tokens for Your Workspace** and click "Install to Workspace"
+7. Copy the **Bot User OAuth Token** (starts with `xoxb-`) to `SLACK_BOT_TOKEN` in your `.env` file
+
+### Stripe Setup
+
+1. Go to [Stripe Dashboard](https://dashboard.stripe.com/)
+2. Make sure you're in **Test mode** (toggle in top-left)
+3. Navigate to **Developers** > **API keys**
+4. Copy the **Secret key** (starts with `sk_test_`) to `STRIPE_SECRET_KEY` in your `.env` file
+
+That's it! No webhooks needed - just run the fetch script to sync data.
+
+## Usage
+
+### Quick Demo (Recommended)
+
+Run the demo script to simulate both trial requests and customer messages:
 
 ```bash
-npm run build
-npm run preview
+npm run demo
 ```
 
-## Demo Script (90 seconds)
+This will:
+1. Create a fake trial request
+2. Send simulated customer messages to your Slack workspace
+3. Show you where to find everything in the app
 
-**[0:00] Opening Screen**
-"This is an AI-powered sales prioritization dashboard. Instead of manually reviewing 50+ deals, AI categorizes them for you based on signals from calls, emails, Slack, and product usage."
+### Interactive Demo (For Presentations)
 
-**[0:15] Numbers View**
-"Here are my 4 buckets: 4 deals ready to close, 5 going cold, 3 churn risks, and 4 upsell opportunities. The AI analyzed 54 signals across 18 deals to generate these insights."
+For a step-by-step interactive demo with pauses between each step:
 
-**[0:25] Switch to Priority List**
-*Click "Priority List" button*
-"Let's look at the eager-to-sign deals in detail. Each deal shows the company, amount, stage, and last activity."
+```bash
+npm run interactive-demo
+```
 
-**[0:35] Deal Card - Acme Corp**
-"Take Acme Corp - the AI flagged this because their legal team requested security documentation yesterday. The confidence is 95% with clear reasons: legal review in progress, budget approved, and they're already in negotiation."
+This demo walks you through:
+1. **Flooding Slack channels** with customer messages (some @mentioning you)
+2. **Receiving a trial request** from Acme Corp
+3. **Creating a Slack channel** for Acme Corp
+4. **Moving Acme Corp to Free Trial** in the CRM
+5. **Getting an alert** that Spaghetti O is ready to sign
+6. **Generating a summary report**
 
-**[0:50] Accept Suggestion**
-*Click "Accept" button*
-"The AI suggests moving this to Negotiation stage. I can see exactly why, and accept or reject with one click. Accepted - the deal is now updated."
+**Setup for Interactive Demo:**
 
-**[1:00] Churn Risk Example**
-*Scroll to Churn Risks section*
-"Here's a churn risk - CloudScale. The AI detected frustration with onboarding and issues being escalated. This helps me proactively reach out before they leave."
+Add these to your `.env` file:
+```bash
+# Your Slack user ID for @mentions (find in your Slack profile settings)
+DEMO_SLACK_USER_ID=U0123456789
 
-**[1:12] Funnel Screen**
-*Click "Funnel" tab*
-"For reporting, I get automatic funnel analysis. No more building spreadsheets. Expected to close $490k this month, $240k lost this week, and 4 currently on trial."
+# Optional: Customer bot user ID (for inviting to channels)
+CUSTOMER_BOT_USER_ID=U9876543210
+```
 
-**[1:25] Pipeline Charts**
-"I can see my inbound sources - 35% from email, 25% from LinkedIn. Outbound response rates show video performs best at 18%. And my pipeline distribution shows where deals are at each stage."
+**Additional Slack Scopes Required:**
+- `channels:manage` - Create channels
+- `groups:write` - Create private channels
+- `users:read` - Look up users
 
-**[1:35] Closing**
-"This dashboard saves hours every week on prioritization and reporting. All suggestions are reversible and transparent - I'm always in control."
+### Individual Scripts
+
+**Simulate Trial Requests:**
+```bash
+npm run spoof-email
+```
+
+**Simulate Customer Messages:**
+```bash
+npm run simulate-customers
+```
+
+**Fetch Stripe Data:**
+```bash
+npm run fetch-stripe
+```
+
+This will:
+- Fetch all customers from your Stripe sandbox
+- Match them to deals by email
+- Update matching deals to "Paid" stage
+- Create payment records for successful charges
+
+**Tip**: Create test customers in Stripe with emails that match your CRM deals (e.g., `sarah@acme.com`, `john@techcorp.com`) to see them sync automatically.
+
+### Simulating Customer Messages
+
+Run the customer bot to send fake messages to your Slack workspace:
+
+```bash
+npm run simulate-customers
+```
+
+This will send messages from various "customers" to your Slack channels.
+
+### Using the Dashboard
+
+1. **Inbox Tab**: View Slack messages and trial requests. Click "Create Channel" to approve a trial request and create a Slack channel.
+2. **CRM Tab**: Drag and drop deals between pipeline stages.
+3. **Stripe Tab**: View payments and MRR from your Stripe sandbox.
+4. **Report Tab**: Generate a business report with aggregated data and export to PDF.
+
+**Recommended Workflow:**
+1. Start the backend: `npm run server`
+2. Start the frontend: `npm run dev`
+3. Run the demo: `npm run demo`
+4. Check the Inbox tab to see trial requests and messages
+5. Approve trial requests by clicking "Create Channel"
+6. Check the CRM tab to see deals in the pipeline
+7. Run `npm run fetch-stripe` to sync Stripe payments
+8. Generate a report in the Report tab
+
+## API Endpoints
+
+### CRM
+- `GET /api/crm/deals` - Get all deals
+- `GET /api/crm/deals/:id` - Get a specific deal
+- `POST /api/crm/deals` - Create a new deal
+- `PATCH /api/crm/deals/:id/stage` - Update deal stage
+- `GET /api/crm/trial-requests` - Get pending trial requests
+- `POST /api/crm/trial-requests/:id/dismiss` - Dismiss a trial request
+
+### Slack
+- `GET /api/slack/messages?channels=channel1,channel2` - Get messages from channels
+- `POST /api/slack/create-channel` - Create a new Slack channel
+- `POST /api/slack/post-message` - Post a message to a channel
+
+### Gmail (Spoof Mode)
+- `POST /api/gmail/check` - Check Gmail for trial requests (currently in spoof mode)
+
+### Stripe
+- `GET /api/stripe/payments` - Get recent payments
+- `GET /api/stripe/mrr` - Get monthly recurring revenue
 
 ## Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── Layout.tsx       # Navigation and page wrapper
-│   ├── DealCard.tsx     # Single deal with suggestion
-│   ├── BucketCard.tsx   # Category bucket card
-│   └── MetricCard.tsx   # KPI display card
-├── data/                # Mock data
-│   └── deals.ts         # 18 sample deals with signals
-├── engine/              # AI Suggestion Engine
-│   └── suggestionEngine.ts  # Heuristic-based classification
-├── pages/               # Main screens
-│   ├── Prioritization.tsx   # Primary screen (2 views)
-│   └── Funnel.tsx           # Pipeline visualizer
-├── store/               # Redux state management
-│   ├── index.ts
-│   ├── dealsSlice.ts
-│   └── suggestionsSlice.ts
-├── types/               # TypeScript definitions
-│   └── index.ts
-├── App.tsx              # Main app with routing
-├── main.tsx             # Entry point
-└── index.css            # Tailwind imports
+sales-rep-visualizer/
+├── server/                 # Backend server
+│   ├── index.ts           # Express server entry
+│   ├── routes/            # API routes
+│   ├── services/          # Service layer (Slack, Gmail, Stripe)
+│   ├── store/             # In-memory data store
+│   └── types.ts           # Backend types
+├── src/                   # Frontend
+│   ├── components/        # React components
+│   ├── pages/             # Page components
+│   ├── data/              # Mock data
+│   ├── engine/            # AI/analysis engines
+│   ├── store/             # Redux store
+│   └── types/             # TypeScript types
+├── scripts/               # Utility scripts
+│   ├── check-email.ts     # Gmail checker
+│   ├── simulate-customers.ts  # Customer bot
+│   ├── get-gmail-token.ts # OAuth token generator
+│   └── spoof-email.ts     # Spoof trial request
+└── package.json
 ```
 
-## How the AI Works
+## Tech Stack
 
-The suggestion engine uses heuristic-based keyword matching on deal signals:
+- **Frontend**: React 19, TypeScript, Tailwind CSS, Redux Toolkit, Recharts
+- **Backend**: Node.js, Express, TypeScript
+- **Integrations**: Slack Web API, Gmail API (spoof mode), Stripe API
 
-| Bucket | Trigger Keywords |
-|--------|------------------|
-| **Eager to Sign** | pricing, procurement, legal review, security, budget approved, ready to sign |
-| **Least Eager** | ghosting, no response, pushed back, not a priority, revisit next quarter |
-| **Churn Risk** | frustrated, issues, complaints, considering alternatives, low usage, escalation |
-| **Upsell Opportunity** | usage spike, team expansion, feature request, add seats, expand |
+## Development
 
-Confidence scores are calculated based on:
-- Number of matching keywords
-- Recency of activity
-- Current deal stage
-- Signal strength
+### Building for Production
 
-## Customization
+```bash
+npm run build
+```
 
-To add your own deals or modify the suggestion logic:
+### Type Checking
 
-1. Edit `src/data/deals.ts` to add/modify deals and signals
-2. Edit `src/engine/suggestionEngine.ts` to adjust classification rules
-3. The dashboard will automatically update with new suggestions
+```bash
+npx tsc --noEmit
+```
+
+## Troubleshooting
+
+### Slack API errors
+Make sure your bot token has the required scopes:
+- `channels:history`
+- `channels:join`
+- `chat:write`
+- `groups:history`
+- `im:history`
+- `mpim:history`
+
+### No trial requests appearing
+Run `npm run spoof-email` to create a fake trial request for testing.
+
+### Stripe data not syncing
+Make sure your Stripe customers have emails that match your CRM deals. Run `npm run fetch-stripe` to sync data.
 
 ## License
 
